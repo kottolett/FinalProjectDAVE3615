@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="modal-login" class="modal fade loginModal" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form th:action="@{/login}" method="POST">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Log in</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="email" name="username" id="login-email" class="form-control validate">
+                        <label data-error="wrong" data-success="right" for="login-email">Your email</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" id="login-pass" class="form-control validate">
+                        <label data-error="wrong" data-success="right" for="login-pass">Your password</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Login</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:fragment="modal-signup" class="modal fade signupModal" id="modalSignupForm" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form th:action="@{/register}" modelAttribute="user" method="POST">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Sign in</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="signup-userName" class="form-control-label">Username</label>
+                        <input type="text" id="signup-userName" name="userName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-name" class="form-control-label">Name</label>
+                        <input type="text" id="signup-name" name="name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email" class="form-control-label">Your email</label>
+                        <input type="email" id="signup-email" name="email" class="form-control validate">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-pass" class="form-control-label">Your password</label>
+                        <input type="password" id="signup-pass" name="password" class="form-control validate">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-url" class="form-control-label">Link</label>
+                        <input type="text" id="signup-url" name="url" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Sign up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="modal-tweet" class="modal fade tweetModal" id="modalTweetForm" tabindex="-1" role="dialog" aria-labelledby="tweetModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form th:action="@{/saveTweet}" modelAttribute="tweet" method="POST">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Tweet</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea name="tweetContent" class="form-control" id="tweet-content" rows="3" data-status-message="#counter"></textarea>
+                        <div id="counter" class="text-right limit-text-status text-primary"></div>
+                    </div>
+                    <br/>
+                    <div class="form-group">
+                        <label for="tweet-url" class="form-control-label">Image url</label>
+                        <input type="text" id="tweet-url" name="media" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Send tweet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

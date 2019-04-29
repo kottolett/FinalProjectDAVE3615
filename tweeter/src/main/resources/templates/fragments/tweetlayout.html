@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="tweetbox">
+
+    <div class="card text-left rounded m-2" th:each="tweet : ${tweets}">
+        <h4 class="card-header bg-white border-bottom-0">
+            <b class="card-text" th:each="user : ${users.?[id == __${tweet.userId}__]}" th:text="${user.name}"></b>
+            <a th:href="@{'/search?q=userId:'+${tweet.userId}}" class="card-link"><small class="card-text text-muted" th:each="user : ${users.?[id == __${tweet.userId}__]}" th:text="'@'+${user.userName}"></small></a>
+        </h4>
+        <div class="card-body bg-white">
+            <p class="card-text" th:text="${tweet.tweetContent}"></p>
+            <img class="img-fluid" th:if="${tweet.media}" th:src="${tweet.media}" allowfullscreen />
+            <br/>
+            <span th:each="tag : ${#strings.arraySplit(tweet.tags, ' ')}">
+                <a sec:authorize="isAuthenticated()" th:href="@{'/search?q=tags:*'+${tag}+'*'}" class="card-link" th:text="'#'+${tag}"></a>
+                <a sec:authorize="!isAuthenticated()" class="card-link" th:text="'#'+${tag}"></a>
+            </span>
+            <div>
+                <a href="#" class="text-dark"><i class="far fa-thumbs-up"></i></a>
+                <span class="card-text" th:text="${tweet.likes}"></span>
+                <span>&nbsp;&nbsp;</span>
+                <a href="#" class="text-dark"><i class="fas fa-retweet"></i></a>
+                <span class="card-text" th:text="${tweet.retweets}"></span>
+            </div>
+            <small class="text-muted" th:text="${#temporals.format(tweet.postTime, 'dd-MM-yyyy HH:mm')}"></small>
+        </div>
+    </div>
+
+</div>
+</html>
