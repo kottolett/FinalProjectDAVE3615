@@ -1,6 +1,6 @@
 package no.oslomet.tweeter.service;
 
-import no.oslomet.tweeter.model.Retweet;
+import no.oslomet.tweeter.model.TweetMap;
 import no.oslomet.tweeter.model.Tweet;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @Service
 public class TweetService {
     String BASE_URL = "http://localhost:9091/tweets";
-    String RE_URL = "http://localhost:9091/retweets";
     private RestTemplate restTemplate = new RestTemplate();
 
     public List<Tweet> getAllTweets() {
@@ -25,8 +24,8 @@ public class TweetService {
         ).collect(Collectors.toList());
     }
 
-    public List<Retweet> getAllRetweets() {
-        return Arrays.stream(restTemplate.getForObject(RE_URL, Retweet[].class)
+    public List<TweetMap> getAllTweetsMapped() {
+        return Arrays.stream(restTemplate.getForObject(BASE_URL+"/map", TweetMap[].class)
         ).collect(Collectors.toList());
     }
 
@@ -42,7 +41,7 @@ public class TweetService {
 
     public Tweet saveTweet(Tweet newTweet) { return restTemplate.postForObject(BASE_URL, newTweet, Tweet.class); }
 
-    public Retweet saveRetweet(Retweet reTweet) { return restTemplate.postForObject(RE_URL, reTweet, Retweet.class); }
+    public TweetMap saveTweetMap(TweetMap tweetMap) { return restTemplate.postForObject(BASE_URL+"/map", tweetMap, TweetMap.class); }
 
 
     public void updateTweet(Long id, Tweet updatedTweet) { restTemplate.put(BASE_URL+"/"+id, updatedTweet); }

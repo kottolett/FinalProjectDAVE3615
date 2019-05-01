@@ -26,7 +26,7 @@ public class TweeterApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         //Comment out after initial run:
-        seedUsers();
+        //seedUsers();
     }
 
     public void seedUsers() {

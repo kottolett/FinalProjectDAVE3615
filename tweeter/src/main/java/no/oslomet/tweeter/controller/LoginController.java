@@ -31,6 +31,9 @@ public class LoginController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute("user") TweetUser user) {
+        if (userService.emailExists(user.getEmail())) {
+            throw new RuntimeException("Account already exists with this email");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRegistered(LocalDateTime.now().withNano(0));
         user.setRole("USER");

@@ -5,12 +5,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Retweet {
+public class TweetMap {
 
     private Long tweetId;
     private Long userId;
 
-    public Retweet(Long tweetId, Long userId) {
+    public TweetMap(Long tweetId, Long userId) {
         this.tweetId = tweetId;
         this.userId = userId;
     }

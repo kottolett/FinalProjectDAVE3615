@@ -1,6 +1,6 @@
 package no.oslomet.tweetserver.service;
 
-import no.oslomet.tweetserver.model.Retweet;
+import no.oslomet.tweetserver.model.TweetMap;
 import no.oslomet.tweetserver.model.Tweet;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public interface TweetService {
     Tweet getTweetById(Long id);
     Tweet saveTweet(Tweet tweet);
     void deleteTweetById(Long id);
-    List<Retweet> getAllRetweets();
-    Retweet saveRetweet(Retweet retweet);
+    List<TweetMap> getAllTweetsMapped();
+    TweetMap saveTweetMap(TweetMap tweetMap);
 
 }

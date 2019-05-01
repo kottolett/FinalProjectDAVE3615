@@ -9,13 +9,13 @@ import javax.persistence.Id;
 @Entity
 @Data
 @NoArgsConstructor
-public class Retweet {
+public class TweetMap {
 
     @Id
     private Long tweetId;
     private Long userId;
 
-    public Retweet(Long tweetId, Long userId) {
+    public TweetMap(Long tweetId, Long userId) {
         this.tweetId = tweetId;
         this.userId = userId;
     }

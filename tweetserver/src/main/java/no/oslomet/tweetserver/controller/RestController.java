@@ -1,7 +1,7 @@
 package no.oslomet.tweetserver.controller;
 
 import com.google.common.base.Joiner;
-import no.oslomet.tweetserver.model.Retweet;
+import no.oslomet.tweetserver.model.TweetMap;
 import no.oslomet.tweetserver.model.Tweet;
 import no.oslomet.tweetserver.search.SearchOperation;
 import no.oslomet.tweetserver.search.TweetSpecificationsBuilder;
@@ -38,7 +38,9 @@ public class RestController {
     public void deleteTweetById(@PathVariable Long id) { tweetService.deleteTweetById(id); }
 
     @PostMapping("/tweets")
-    public Tweet saveTweet(@RequestBody Tweet newTweet) { return tweetService.saveTweet(newTweet); }
+    public Tweet saveTweet(@RequestBody Tweet newTweet) {
+        return tweetService.saveTweet(newTweet);
+    }
 
     @RestResource(exported = false)
     @PutMapping("/tweets/{id}")
@@ -47,11 +49,11 @@ public class RestController {
         return tweetService.saveTweet(tweet);
     }
 
-    @GetMapping("/retweets")
-    public List<Retweet> getAllRetweets() { return tweetService.getAllRetweets(); }
+    @GetMapping("/tweets/map")
+    public List<TweetMap> getAllTweetsMapped() { return tweetService.getAllTweetsMapped(); }
 
-    @PostMapping("/retweets")
-    public Retweet saveRetweet(@RequestBody Retweet reTweet) { return tweetService.saveRetweet(reTweet); }
+    @PostMapping("/tweets/map")
+    public TweetMap saveTweetMap(@RequestBody TweetMap tweetMap) { return tweetService.saveTweetMap(tweetMap); }
 
     @GetMapping("/tweets/search")
     @ResponseBody

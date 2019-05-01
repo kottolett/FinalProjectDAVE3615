@@ -17,11 +17,9 @@
     <script src="/static/js/jquery.limitText.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#modalTweetForm').on('shown.bs.modal', function() {
-                $('#tweet-content').limitText({
-                    limit: 140
-                });
-            })
+            $('#modalTweetForm').on('shown.bs.modal', function (e) {
+                $('#tweet-content').limitText({limit: 140});
+            });
         });
     </script>
     <title>Tweeter</title>
@@ -30,11 +28,11 @@
 
 <div class="container-fluid">
     <nav class="navbar sticky-top navbar-light bg-white border-bottom" th:fragment="navbar">
-        <form sec:authorize="isAuthenticated()" class="form-inline" th:action="@{/search}">
+        <form sec:authorize="isAuthenticated()" class="form-inline" th:action="@{/searchTweet}">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" name="q" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
-        <form sec:authorize="!isAuthenticated()" class="form-inline invisible" th:action="@{/search}">
+        <form sec:authorize="!isAuthenticated()" class="form-inline invisible" th:action="@{/searchTweet}">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" name="q" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>

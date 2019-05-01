@@ -1,6 +1,6 @@
 package no.oslomet.tweetserver;
 
-import no.oslomet.tweetserver.model.Retweet;
+import no.oslomet.tweetserver.model.TweetMap;
 import no.oslomet.tweetserver.model.Tweet;
 import no.oslomet.tweetserver.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.List;
 
 @SpringBootApplication
 public class TweetserverApplication implements CommandLineRunner {
@@ -23,6 +24,10 @@ public class TweetserverApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        seedTweets();
+    }
+
+    public void seedTweets() {
         tweetService.saveTweet(new Tweet(LocalDateTime.of(2019, Month.JANUARY, 15, 20, 23, 07), "dogs used to say \"Arf\" and \"Bow-Wow\" . Now they say shit like \"Wouwouwouwou\"", null, 4L, 0, 0, null));
         tweetService.saveTweet(new Tweet(LocalDateTime.of(2019, Month.APRIL, 12, 23, 52, 10), "Dette er en test av #tags", "tags", 1L, 59, 0, null));
         tweetService.saveTweet(new Tweet(LocalDateTime.of(2019, Month.APRIL, 3, 13, 23, 48), "swinging my great grandfather's nine iron around on my motorcycle and saying \"Seniors Rule\" every time i hit something", null, 4L, 7, 0, null));
@@ -33,6 +38,11 @@ public class TweetserverApplication implements CommandLineRunner {
         tweetService.saveTweet(new Tweet(LocalDateTime.of(2019, Month.FEBRUARY, 26, 12, 7, 23), "Dette er en bilde-test", null, 1L, 700, 52,  "https://i.kym-cdn.com/photos/images/original/001/486/497/cf3.jpg"));
         tweetService.saveTweet(new Tweet(LocalDateTime.of(2019, Month.FEBRUARY, 22, 9, 38, 2), "Hey what is up guys, welcome back to my YouTube channel, #SMASH #that #like", "SMASH that like", 2L, 55, 4, null));
         tweetService.saveTweet(new Tweet(LocalDateTime.of(2019, Month.FEBRUARY, 10, 3, 55, 0), "move every game stop to the peak of K2 and you will find out damn quick who are the real gamers", null, 4L, 20, 0, null));
-        tweetService.saveRetweet(new Retweet(1L, 3L));
+        /*
+        List<Tweet> allTweets = tweetService.getAllTweets();
+        for (Tweet tweet : allTweets) {
+            tweetService.saveTweetMap(new TweetMap(tweet.getId(), tweet.getUserId()));
+        }
+        */
     }
 }

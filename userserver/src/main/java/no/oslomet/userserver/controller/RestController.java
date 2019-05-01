@@ -7,7 +7,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
@@ -31,10 +30,15 @@ public class RestController {
     @PostMapping("/users")
     public TweetUser saveUser(@RequestBody TweetUser newUser) { return userService.saveUser(newUser); }
 
-    @RestResource(exported = false)
+    //@RestResource(exported = false)
     @PutMapping("/users/{id}")
     public TweetUser updateUser(@PathVariable Long id, @RequestBody TweetUser updatedUser) {
         updatedUser.setId(id);
         return userService.saveUser(updatedUser);
+    }
+
+    @PatchMapping("/users/{id}")
+    public TweetUser addFriend(@PathVariable Long id, @RequestParam Long friend) {
+        return userService.addFriend(id, friend);
     }
 }

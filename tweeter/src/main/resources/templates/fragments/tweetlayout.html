@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="tweetbox">
-
     <div class="card text-left rounded m-2" th:each="tweet : ${tweets}">
-        <h4 class="card-header bg-white border-bottom-0">
-            <b class="card-text" th:each="user : ${users.?[id == __${tweet.userId}__]}" th:text="${user.name}"></b>
-            <a th:href="@{'/search?q=userId:'+${tweet.userId}}" class="card-link"><small class="card-text text-muted" th:each="user : ${users.?[id == __${tweet.userId}__]}" th:text="'@'+${user.userName}"></small></a>
-        </h4>
+        <div th:each="userx : ${users.?[id == __${tweet.userId}__]}">
+            <h4 class="card-header bg-white border-bottom-0">
+                <b class="card-text" th:text="${userx.name}"></b>
+                <a sec:authorize="isAuthenticated()" th:href="@{/searchUser(q=${tweet.userId})}" class="card-link"><small class="card-text text-muted" th:text="'@'+${userx.userName}"></small></a>
+                <a sec:authorize="!isAuthenticated()" class="card-link"><small class="card-text text-muted"  th:text="'@'+${userx.userName}"></small></a>
+                <!--
+                <form sec:authorize="isAuthenticated()" th:action="@{/addFriend(friend=${userx.id})}">
+                <button class="btn btn-sm-primary" type="submit">Add friend</button>
+                </form>
+                -->
+            </h4>
+        </div>
         <div class="card-body bg-white">
             <p class="card-text" th:text="${tweet.tweetContent}"></p>
-            <img class="img-fluid" th:if="${tweet.media}" th:src="${tweet.media}" allowfullscreen />
+            <img class="img-fluid" th:if="${tweet.media}" th:src="${tweet.media}" />
             <br/>
             <span th:each="tag : ${#strings.arraySplit(tweet.tags, ' ')}">
-                <a sec:authorize="isAuthenticated()" th:href="@{'/search?q=tags:*'+${tag}+'*'}" class="card-link" th:text="'#'+${tag}"></a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/searchTag(q=${tag})}" class="card-link" th:text="'#'+${tag}"></a>
                 <a sec:authorize="!isAuthenticated()" class="card-link" th:text="'#'+${tag}"></a>
             </span>
             <div>

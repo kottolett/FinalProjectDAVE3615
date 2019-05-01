@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Data
 @Entity
@@ -20,6 +21,7 @@ public class TweetUser {
     private LocalDateTime registered;
     private String name;
     private String url;
+    private ArrayList<Long> friends;
 
     public TweetUser(String email, String userName, String password, String role, LocalDateTime registered, String name, String url) {
         this.email = email;
@@ -29,5 +31,9 @@ public class TweetUser {
         this.registered = registered;
         this.name = name;
         this.url = url;
+    }
+
+    public void addFriend(Long id) {
+        this.friends.add(id);
     }
 }

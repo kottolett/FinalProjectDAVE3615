@@ -31,7 +31,7 @@ public class UserService {
                 return Optional.of(user);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     public TweetUser saveUser(TweetUser newUser) { return restTemplate.postForObject(BASE_URL, newUser, TweetUser.class); }
@@ -39,5 +39,15 @@ public class UserService {
     public void updateUser(Long id, TweetUser updatedUser) { restTemplate.put(BASE_URL+"/"+id, updatedUser); }
 
     public void deleteUserById(Long id) { restTemplate.delete(BASE_URL+"/"+id); }
+
+    public boolean emailExists(String email) {
+        Optional<TweetUser> user = findUserByEmail(email);
+        if(user.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    public void addFriend(Long id, Long friend) { restTemplate.patchForObject(BASE_URL+"/"+id, friend, Long.class);}
 
 }

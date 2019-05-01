@@ -15,12 +15,16 @@ public class UserServiceImpl implements UserService {
 
     public List<TweetUser> getAllUsers() { return userRepository.findAll(); }
 
-    public TweetUser getUserByEmail(String email) { return userRepository.findUserByEmail(email).get(); }
-
     public TweetUser getUserById(Long id) { return userRepository.findById(id).get(); }
 
     public TweetUser saveUser(TweetUser user) { return userRepository.save(user); }
 
     public void deleteUserById(Long id) { userRepository.deleteById(id); }
+
+    public TweetUser addFriend(Long id, Long friend) {
+        TweetUser user = userRepository.findById(id).get();
+        user.addFriend(friend);
+        return userRepository.save(user);
+    }
 
 }

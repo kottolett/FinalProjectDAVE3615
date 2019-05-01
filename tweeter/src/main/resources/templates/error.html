@@ -4,9 +4,10 @@
 <body class="bg-light">
 <div th:replace="fragments/header.html :: navbar"></div>
 
-<div class="container p-5 m-auto" th:if="${loginError}">
+
+<div class="container p-5 m-auto">
     <div class="alert alert-danger text-center">
-        <h4 class="error">Wrong username or password</h4>
+        <h4 class="error" th:text="${message}"></h4>
         <p>Try again</p>
     </div>
 </div>
