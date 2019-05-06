@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -56,7 +58,15 @@ public class AdminController {
         for (Tweet tweet : tweets) {
             tweetService.deleteTweetById(tweet.getId());
         }
+        for (Tweet tweet : tweetService.getAllTweets()) {
+            if (tweet.getRetweets().containsKey(id)) {
+                HashMap<Long, LocalDateTime> retweet = tweet.getRetweets();
+                retweet.remove(id);
+                tweet.setRetweets(retweet);
+                tweetService.updateTweet(tweet.getId(), tweet);
+            }
+        }
         userService.deleteUserById(id);
-        return "redirect:/admin";
+        return "redirect:/logout";
     }
 }

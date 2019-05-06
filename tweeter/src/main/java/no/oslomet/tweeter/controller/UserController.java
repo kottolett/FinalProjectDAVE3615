@@ -10,7 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -64,6 +66,14 @@ public class UserController {
         List<Tweet> tweets = tweetService.getAllByUserId(id);
         for (Tweet tweet : tweets) {
             tweetService.deleteTweetById(tweet.getId());
+        }
+        for (Tweet tweet : tweetService.getAllTweets()) {
+            if (tweet.getRetweets().containsKey(id)) {
+                HashMap<Long, LocalDateTime> retweet = tweet.getRetweets();
+                retweet.remove(id);
+                tweet.setRetweets(retweet);
+                tweetService.updateTweet(tweet.getId(), tweet);
+            }
         }
         userService.deleteUserById(id);
         return "redirect:/logout";
