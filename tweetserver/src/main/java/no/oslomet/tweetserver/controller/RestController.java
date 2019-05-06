@@ -1,7 +1,6 @@
 package no.oslomet.tweetserver.controller;
 
 import com.google.common.base.Joiner;
-import no.oslomet.tweetserver.model.TweetMap;
 import no.oslomet.tweetserver.model.Tweet;
 import no.oslomet.tweetserver.search.SearchOperation;
 import no.oslomet.tweetserver.search.TweetSpecificationsBuilder;
@@ -49,12 +48,6 @@ public class RestController {
         return tweetService.saveTweet(tweet);
     }
 
-    @GetMapping("/tweets/map")
-    public List<TweetMap> getAllTweetsMapped() { return tweetService.getAllTweetsMapped(); }
-
-    @PostMapping("/tweets/map")
-    public TweetMap saveTweetMap(@RequestBody TweetMap tweetMap) { return tweetService.saveTweetMap(tweetMap); }
-
     @GetMapping("/tweets/search")
     @ResponseBody
     public List<Tweet> search(@RequestParam(value="q") String search) {
@@ -70,9 +63,7 @@ public class RestController {
                     matcher.group(3),
                     matcher.group(5));
         }
-
         Specification<Tweet> spec = builder.build();
-        System.out.println(spec);
         return tweetService.searchTweets(spec);
     }
 }

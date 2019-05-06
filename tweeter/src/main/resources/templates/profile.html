@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header.html :: header"></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/header :: header"></head>
 <body class="bg-light">
-<div th:replace="fragments/header.html :: navbar"></div>
+<div th:replace="fragments/header :: navbar"></div>
 
-
-
-<div class="container">
-    <div class="col-sm-10 mx-auto">
-        <div th:replace="fragments/tweetlayout.html :: tweetbox">
+<div class="container-fluid">
+    <div class="d-flex flex-row">
+        <div class="col-3 flex-column flex-fill">
+            <div th:replace="fragments/profileControl :: profilebox"></div>
+        </div>
+        <div class="col-6 justify-content-center flex-fill flex-grow-1">
+            <div th:replace="fragments/tweetlayout :: tweetbox"></div>
+        </div>
+        <div class="col-3 flex-column flex-fill">
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}" class="btn btn-outline-secondary small m-3 float-right" th:text="'Admin panel'"></a>
         </div>
     </div>
 </div>

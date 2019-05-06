@@ -42,12 +42,9 @@ public class UserService {
 
     public boolean emailExists(String email) {
         Optional<TweetUser> user = findUserByEmail(email);
-        if(user.isPresent()) {
-            return true;
-        }
-        return false;
+        return (user.isPresent());
     }
 
-    public void addFriend(Long id, Long friend) { restTemplate.patchForObject(BASE_URL+"/"+id, friend, Long.class);}
+    public void addFriend(Long id, Long friend) { restTemplate.patchForObject(BASE_URL+"/addFriend/"+id, friend, Long.class);}
 
 }

@@ -12,8 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.*;
 
 @Controller
 public class MainController {
@@ -23,63 +22,112 @@ public class MainController {
     @Autowired
     private UserService userService;
 
-    private Pattern hashtag = Pattern.compile("#\\w+");
-
+    @SuppressWarnings("Duplicates")
     @GetMapping({"/", "/index"})
     public String index(Model model) {
-        model.addAttribute("tweets", tweetService.getAllTweets());
+        List<Tweet> tweets = new ArrayList<>();
+        for (Tweet tweet : tweetService.getAllTweets()) {
+            if (!tweet.getRetweets().isEmpty()) {
+                for (HashMap.Entry<Long, LocalDateTime> retweet : tweet.getRetweets().entrySet()) {
+                    Tweet newTweet = new Tweet(tweet.getPostTime(), tweet.getTweetContent(), tweet.getTags(), tweet.getUserId(), tweet.getMedia(), tweet.getLikes(), tweet.getRetweets());
+                    newTweet.setRt(true);
+                    newTweet.setId(tweet.getId());
+                    newTweet.setRetweeted(newTweet.getPostTime());
+                    newTweet.setPostTime(retweet.getValue());
+                    tweets.add(newTweet);
+                }
+                tweet.setRt(false);
+                tweets.add(tweet);
+            } else {
+                tweet.setRt(false);
+                tweets.add(tweet);
+            }
+        }
+        Collections.sort(tweets, Comparator.comparing(Tweet::getPostTime).reversed());
         model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("tweets", tweets);
         return "index";
     }
 
+    @SuppressWarnings("Duplicates")
     @GetMapping("/home")
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         TweetUser user = userService.findUserByEmail(auth.getName()).get();
         model.addAttribute("user", user);
-        model.addAttribute("tweets", tweetService.getAllTweets());
+        List<Tweet> tweets = new ArrayList<>();
+        for (Tweet tweet : tweetService.getAllTweets()) {
+            if (!tweet.getRetweets().isEmpty()) {
+                for (HashMap.Entry<Long, LocalDateTime> retweet : tweet.getRetweets().entrySet()) {
+                    Tweet newTweet = new Tweet(tweet.getPostTime(), tweet.getTweetContent(), tweet.getTags(), tweet.getUserId(), tweet.getMedia(), tweet.getLikes(), tweet.getRetweets());
+                    newTweet.setRt(true);
+                    newTweet.setId(tweet.getId());
+                    newTweet.setRetweeted(newTweet.getPostTime());
+                    newTweet.setPostTime(retweet.getValue());
+                    tweets.add(newTweet);
+                }
+                tweet.setRt(false);
+                tweets.add(tweet);
+            } else {
+                tweet.setRt(false);
+                tweets.add(tweet);
+            }
+        }
+        Collections.sort(tweets, Comparator.comparing(Tweet::getPostTime).reversed());
         model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("tweets", tweets);
         return "index";
     }
 
-    @PostMapping("/saveTweet")
-    public String saveTweet(@ModelAttribute("tweet") Tweet tweet) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        TweetUser user = userService.findUserByEmail(auth.getName()).get();
-        tweet.setUserId(user.getId());
-        tweet.setPostTime(LocalDateTime.now().withNano(0));
-        tweet.setLikes(0);
-        tweet.setRetweets(0);
-
-        StringBuilder builder = new StringBuilder();
-        Matcher matcher = hashtag.matcher(tweet.getTweetContent());
-        while (matcher.find()) {
-            tweet.setTags(builder.append(matcher.group().replaceAll("#", "")).toString());
-        }
-        tweetService.saveTweet(tweet);
-        return "redirect:/home";
-    }
-
+    @SuppressWarnings("Duplicates")
     @GetMapping("/profile")
-    public String profile(Model model) {
+    public String profile(Long id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         TweetUser user = userService.findUserByEmail(auth.getName()).get();
         model.addAttribute("user", user);
-        model.addAttribute("tweets", tweetService.getAllByUserId(user.getId()));
+        TweetUser selectedUser = userService.getUserById(id);
+        model.addAttribute("selectedUser", selectedUser);
+        List<Tweet> tweets = new ArrayList<>();
+        for (Tweet tweet : tweetService.getAllByUserId(selectedUser.getId())) {
+            if (!tweet.getRetweets().isEmpty()) {
+                for (HashMap.Entry<Long, LocalDateTime> retweet : tweet.getRetweets().entrySet()) {
+                    Tweet newTweet = new Tweet(tweet.getPostTime(), tweet.getTweetContent(), tweet.getTags(), tweet.getUserId(), tweet.getMedia(), tweet.getLikes(), tweet.getRetweets());
+                    newTweet.setRt(true);
+                    newTweet.setId(tweet.getId());
+                    newTweet.setRetweeted(newTweet.getPostTime());
+                    newTweet.setPostTime(retweet.getValue());
+                    tweets.add(newTweet);
+                }
+                tweet.setRt(false);
+                tweets.add(tweet);
+            } else {
+                tweet.setRt(false);
+                tweets.add(tweet);
+            }
+        }
+        Collections.sort(tweets, Comparator.comparing(Tweet::getPostTime).reversed());
         model.addAttribute("users", userService.getAllUsers());
-        return "index";
+        model.addAttribute("tweets", tweets);
+        return "profile";
     }
 
-    @PatchMapping("/addFriend")
-    public String addFriend(String friend) {
+    @SuppressWarnings("Duplicates")
+    @GetMapping("/following")
+    public String following(Long id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         TweetUser user = userService.findUserByEmail(auth.getName()).get();
-        userService.addFriend(user.getId(), Long.parseLong(friend));
-        return "redirect:/home";
+        model.addAttribute("user", user);
+        model.addAttribute("users", userService.getAllUsers());
+
+        TweetUser selectedUser = userService.getUserById(id);
+        model.addAttribute("selectedUser", selectedUser);
+
+        List<Tweet> tweets = new ArrayList<>();
+        for (Long f : selectedUser.getFollowing()) {
+            tweets.addAll(tweetService.getAllByUserId(f));
+        }
+        Collections.sort(tweets, Comparator.comparing(Tweet::getPostTime).reversed());
+        model.addAttribute("tweets", tweets);
+        return "index";
     }
-
-
-
-
-
 }

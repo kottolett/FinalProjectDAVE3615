@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header.html :: header"></head>
+<head th:replace="fragments/header :: header"></head>
 <body class="bg-light">
-<div th:replace="fragments/header.html :: navbar"></div>
+<div th:replace="fragments/header :: navbar"></div>
 
 <div class="container p-5 m-auto" th:if="${loginError}">
     <div class="alert alert-danger text-center">
         <h4 class="error">Wrong username or password</h4>
+        <p>Try again</p>
+    </div>
+</div>
+
+<div class="container p-5 m-auto" th:unless="${loginError}">
+    <div class="alert alert-danger text-center">
+        <h4 class="error">Try logging in first</h4>
         <p>Try again</p>
     </div>
 </div>

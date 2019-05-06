@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:fragment="profilebox">
+    <div class="card text-left rounded m-2" sec:authorize="isAuthenticated()">
+        <h4 class="card-header bg-white border-bottom-0">
+            <b class="card-text" th:text="${selectedUser.name}"></b>
+            <a th:href="@{/profile(id=${selectedUser.id})}" class="card-link"><small class="card-text text-muted" th:text="'@'+${selectedUser.userName}"></small></a>
+            <br/>
+            <small class="card-text p-1 text-muted"><em th:text="'Tweets: '+${#lists.size(tweets)}"></em></small>
+            <br/>
+        </h4>
+        <div class="card-body bg-white">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div>
+                        <div class="panel-heading">
+                            <h6 class="panel-title" th:if="${selectedUser.url ne ''}">
+                                <b class="card-text text-dark">Website: <a class="text-dark" th:href="${selectedUser.url}" th:text="${selectedUser.url}"></a></b>
+                            </h6>
+                        </div>
+                        <br/>
+                        <div class="panel-heading">
+                            <h6 class="panel-title">
+                                <b><a data-toggle="collapse" href="#collapse1" class="card-text p-0 text-dark" th:text="'Followers: '+${#lists.size(selectedUser.followers)}"></a></b>
+                            </h6>
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse" th:each="follower : ${selectedUser.followers}">
+                            <div class="list-group list-group-flush list-unstyled" th:each="fr : ${users.?[id eq __${follower}__]}">
+                                <a class="card-text p-1 text-dark list-group-item list-group-item-action" th:href="@{/profile(id=${fr.id})}" th:text="${fr.userName}"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div>
+                        <div class="panel-heading">
+                            <h6 class="panel-title">
+                                <b><a data-toggle="collapse" href="#collapse2" class="card-text p-0 text-dark" th:text="'Following: '+${#lists.size(selectedUser.following)}"></a></b>
+                            </h6>
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse" th:each="follow : ${selectedUser.following}">
+                            <div class="list-group list-group-flush list-unstyled" th:each="fr : ${users.?[id eq __${follow}__]}">
+                                <a class="card-text p-1 text-dark list-group-item list-group-item-action" th:href="@{/profile(id=${fr.id})}" th:text="${fr.userName}"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div sec:authorize="isAuthenticated()" th:if="${user.id} eq ${selectedUser.id}">
+                <h6 th:text="'Change password'"></h6>
+                <form th:action="@{/change}" method="post">
+                    <input type="password" name="oldPassword" placeholder="Old Password" />
+                    <input type="password" name="newPassword" placeholder="New Password" />
+                    <button class="btn btn-primary" type="submit">Change</button>
+                </form>
+            </div>
+            <br/>
+            <div sec:authorize="isAuthenticated()" th:if="${user.id} eq ${selectedUser.id}">
+                <h6 th:text="'Delete user'"></h6>
+                <h6 class="text-danger" th:text="'Warning: this can not be undone!'"></h6>
+                <a th:href="@{/deleteUser/{id}(id=${user.id})}" th:text="'Delete user'" class="btn btn-danger"></a>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

@@ -44,28 +44,28 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="signup-userName" class="form-control-label">Username</label>
-                        <input type="text" id="signup-userName" name="userName" class="form-control">
+                        <input type="text" id="signup-userName" name="userName" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="signup-name" class="form-control-label">Name</label>
-                        <input type="text" id="signup-name" name="name" class="form-control">
+                        <input type="text" id="signup-name" name="name" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="signup-email" class="form-control-label">Your email</label>
-                        <input type="email" id="signup-email" name="email" class="form-control validate">
+                        <input type="email" id="signup-email" name="email" class="form-control validate" required>
                     </div>
                     <div class="form-group">
                         <label for="signup-pass" class="form-control-label">Your password</label>
-                        <input type="password" id="signup-pass" name="password" class="form-control validate">
+                        <input type="password" id="signup-pass" name="password" class="form-control validate" required>
                     </div>
                     <div class="form-group">
-                        <label for="signup-url" class="form-control-label">Link</label>
+                        <label for="signup-url" class="form-control-label">Website link</label>
                         <input type="text" id="signup-url" name="url" class="form-control">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" type="submit" data-toggle="modal" data-target=".loginModal">Sign up</button>
+                    <button class="btn btn-primary" type="submit">Sign up</button>
                 </div>
             </form>
         </div>
@@ -84,8 +84,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <textarea name="tweetContent" class="form-control" id="tweet-content" rows="3" data-status-message="#counter"></textarea>
-                        <div id="counter" class="text-right limit-text-status text-primary"></div>
+                        <textarea maxlength="140" name="tweetContent" class="form-control" id="tweet-content" rows="3" placeholder="Tweet here, 140 characters" required></textarea>
                     </div>
                     <br/>
                     <div class="form-group">

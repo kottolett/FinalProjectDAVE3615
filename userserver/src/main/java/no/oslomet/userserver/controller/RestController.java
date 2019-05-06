@@ -28,17 +28,17 @@ public class RestController {
     public void deleteUserById(@PathVariable Long id) { userService.deleteUserById(id); }
 
     @PostMapping("/users")
-    public TweetUser saveUser(@RequestBody TweetUser newUser) { return userService.saveUser(newUser); }
+    public TweetUser saveUser(@RequestBody TweetUser newUser) {
+        if (userService.getUserByEmail(newUser.getEmail()).isPresent()) {
+            return null;
+        }
+        return userService.saveUser(newUser);
+    }
 
     //@RestResource(exported = false)
     @PutMapping("/users/{id}")
     public TweetUser updateUser(@PathVariable Long id, @RequestBody TweetUser updatedUser) {
         updatedUser.setId(id);
         return userService.saveUser(updatedUser);
-    }
-
-    @PatchMapping("/users/{id}")
-    public TweetUser addFriend(@PathVariable Long id, @RequestParam Long friend) {
-        return userService.addFriend(id, friend);
     }
 }

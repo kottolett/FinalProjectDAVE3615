@@ -1,6 +1,5 @@
 package no.oslomet.tweeter.service;
 
-import no.oslomet.tweeter.model.TweetMap;
 import no.oslomet.tweeter.model.Tweet;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -24,11 +23,6 @@ public class TweetService {
         ).collect(Collectors.toList());
     }
 
-    public List<TweetMap> getAllTweetsMapped() {
-        return Arrays.stream(restTemplate.getForObject(BASE_URL+"/map", TweetMap[].class)
-        ).collect(Collectors.toList());
-    }
-
     public Tweet getTweetById(Long id) {
         Tweet tweet = restTemplate.getForObject(BASE_URL+"/"+id, Tweet.class);
         return tweet;
@@ -40,9 +34,6 @@ public class TweetService {
     }
 
     public Tweet saveTweet(Tweet newTweet) { return restTemplate.postForObject(BASE_URL, newTweet, Tweet.class); }
-
-    public TweetMap saveTweetMap(TweetMap tweetMap) { return restTemplate.postForObject(BASE_URL+"/map", tweetMap, TweetMap.class); }
-
 
     public void updateTweet(Long id, Tweet updatedTweet) { restTemplate.put(BASE_URL+"/"+id, updatedTweet); }
 

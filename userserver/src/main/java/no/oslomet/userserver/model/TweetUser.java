@@ -21,9 +21,10 @@ public class TweetUser {
     private LocalDateTime registered;
     private String name;
     private String url;
-    private ArrayList<Long> friends;
+    private ArrayList<Long> followers;
+    private ArrayList<Long> following;
 
-    public TweetUser(String email, String userName, String password, String role, LocalDateTime registered, String name, String url) {
+    public TweetUser(String email, String userName, String password, String role, LocalDateTime registered, String name, String url, ArrayList<Long> followers, ArrayList<Long> following) {
         this.email = email;
         this.userName = userName;
         this.password = password;
@@ -31,9 +32,7 @@ public class TweetUser {
         this.registered = registered;
         this.name = name;
         this.url = url;
-    }
-
-    public void addFriend(Long id) {
-        this.friends.add(id);
+        this.followers = followers;
+        this.following = following;
     }
 }

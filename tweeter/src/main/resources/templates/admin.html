@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/header :: header"></head>
+<body class="bg-light">
+<div th:replace="fragments/header :: navbar"></div>
+
+<div class="container-fluid">
+    <div class="d-flex flex-row">
+        <div class="col-3 flex-column flex-fill"></div>
+        <div class="col-6 justify-content-center flex-fill">
+            <div class="card text-left rounded m-2" th:each="us : ${users}">
+                <div class="panel-group list-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title list-group-item">
+                                <a class="text-dark text-center" data-toggle="collapse" th:href="'#'+@{collapse}+${us.id}" th:text="${us.name}"></a>
+                                <a class="text-muted small" th:href="@{/profile(id=${us.id})}" th:text="'@'+${us.userName}"></a>
+                            </h4>
+                        </div>
+                        <div th:id="'collapse'+${us.id}" class="panel-collapse list-group-item collapse in">
+                            <div class="panel-body">
+                                <div>
+                                    <div class="panel-heading">
+                                        <h6 class="panel-title">
+                                            <b><a data-toggle="collapse" th:href="'#'+@{collapse}+${us.id}+'fo'" class="card-text p-0 text-dark" th:text="'Followers: '+${#lists.size(us.followers)}"></a></b>
+                                        </h6>
+                                    </div>
+                                    <div th:id="'collapse'+${us.id}+'fo'" class="panel-collapse collapse" th:each="follower : ${us.followers}">
+                                        <div class="list-group list-group-flush list-unstyled" th:each="fr : ${users.?[id eq __${follower}__]}">
+                                            <a class="card-text p-1 text-dark list-group-item list-group-item-action" th:href="@{/profile(id=${fr.id})}" th:text="${fr.userName}"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div>
+                                    <div class="panel-heading">
+                                        <h6 class="panel-title">
+                                            <b><a data-toggle="collapse" th:href="'#'+@{collapse}+${us.id}+'fw'" class="card-text p-0 text-dark" th:text="'Following: '+${#lists.size(us.following)}"></a></b>
+                                        </h6>
+                                    </div>
+                                    <div th:id="'collapse'+${us.id}+'fw'" class="panel-collapse collapse" th:each="follow : ${us.following}">
+                                        <div class="list-group list-group-flush list-unstyled" th:each="fr : ${users.?[id eq __${follow}__]}">
+                                            <a class="card-text p-1 text-dark list-group-item list-group-item-action" th:href="@{/profile(id=${fr.id})}" th:text="${fr.userName}"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <br/>
+                                    <div>
+                                        <h6 th:text="'Change password:'"></h6>
+                                        <form th:action="@{/changeAdmin/{id}(id=${us.id})}" method="post">
+                                            <input type="password" name="newPassword" placeholder="New Password" />
+                                            <button class="btn btn-primary" type="submit">Change</button>
+                                        </form>
+                                    </div>
+                                <br/>
+                                    <div>
+                                        <h6 th:text="'Delete user:'"></h6>
+                                        <a th:href="@{/deleteAdmin/{id}(id=${us.id})}" th:text="'Delete user'" class="btn btn-danger"></a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 flex-column flex-fill"></div>
+    </div>
+</div>
+
+
+<div th:replace="fragments/modals :: modal-login"></div>
+<div th:replace="fragments/modals :: modal-signup"></div>
+<div th:replace="fragments/modals :: modal-tweet"></div>
+
+</body>
+</html>

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,14 +18,10 @@ public class UserServiceImpl implements UserService {
 
     public TweetUser getUserById(Long id) { return userRepository.findById(id).get(); }
 
+    public Optional<TweetUser> getUserByEmail(String email) { return userRepository.findUserByEmail(email); }
+
     public TweetUser saveUser(TweetUser user) { return userRepository.save(user); }
 
     public void deleteUserById(Long id) { userRepository.deleteById(id); }
-
-    public TweetUser addFriend(Long id, Long friend) {
-        TweetUser user = userRepository.findById(id).get();
-        user.addFriend(friend);
-        return userRepository.save(user);
-    }
 
 }

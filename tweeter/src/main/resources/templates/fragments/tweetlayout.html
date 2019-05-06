@@ -1,37 +1,87 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <div th:fragment="tweetbox">
     <div class="card text-left rounded m-2" th:each="tweet : ${tweets}">
-        <div th:each="userx : ${users.?[id == __${tweet.userId}__]}">
-            <h4 class="card-header bg-white border-bottom-0">
-                <b class="card-text" th:text="${userx.name}"></b>
-                <a sec:authorize="isAuthenticated()" th:href="@{/searchUser(q=${tweet.userId})}" class="card-link"><small class="card-text text-muted" th:text="'@'+${userx.userName}"></small></a>
-                <a sec:authorize="!isAuthenticated()" class="card-link"><small class="card-text text-muted"  th:text="'@'+${userx.userName}"></small></a>
-                <!--
-                <form sec:authorize="isAuthenticated()" th:action="@{/addFriend(friend=${userx.id})}">
-                <button class="btn btn-sm-primary" type="submit">Add friend</button>
-                </form>
-                -->
-            </h4>
-        </div>
-        <div class="card-body bg-white">
-            <p class="card-text" th:text="${tweet.tweetContent}"></p>
-            <img class="img-fluid" th:if="${tweet.media}" th:src="${tweet.media}" />
-            <br/>
-            <span th:each="tag : ${#strings.arraySplit(tweet.tags, ' ')}">
-                <a sec:authorize="isAuthenticated()" th:href="@{/searchTag(q=${tag})}" class="card-link" th:text="'#'+${tag}"></a>
-                <a sec:authorize="!isAuthenticated()" class="card-link" th:text="'#'+${tag}"></a>
-            </span>
-            <div>
-                <a href="#" class="text-dark"><i class="far fa-thumbs-up"></i></a>
-                <span class="card-text" th:text="${tweet.likes}"></span>
-                <span>&nbsp;&nbsp;</span>
-                <a href="#" class="text-dark"><i class="fas fa-retweet"></i></a>
-                <span class="card-text" th:text="${tweet.retweets}"></span>
+        <div th:if="${tweet.rt eq true}">
+            <div th:each="rt : ${tweet.retweets}">
+                <div th:each="us : ${users.?[id eq __${tweet.userId}__]}">
+                    <div th:each="rtus : ${users.?[id eq __${rt.key}__]}">
+                        <h4 class="card-header bg-white border-bottom-0">
+                            <small>
+                                <small th:text="'Retweeted by:'"></small>
+                                <a sec:authorize="isAuthenticated()" th:href="@{/profile(id=${rtus.id})}" class="card-link small" th:text="'@'+${rtus.userName}"></a>
+                                <a sec:authorize="!isAuthenticated()" class="card-link small" th:text="'@'+${rtus.userName}"></a>
+                            </small>
+                            <div class="justify-content-left">
+                                <b class="card-text" th:text="${us.name}"></b>
+                                <a sec:authorize="isAuthenticated()" th:href="@{/profile(id=${tweet.userId})}" class="card-link"><small class="card-text text-muted" th:text="'@'+${us.userName}"></small></a>
+                                <a sec:authorize="!isAuthenticated()" class="card-link"><small class="card-text text-muted"  th:text="'@'+${us.userName}"></small></a>
+                                <a sec:authorize="isAuthenticated()" th:unless="${#lists.contains(user.following, us.id) or us.id eq user.id}" th:href="@{/follow/{id}(id=${us.id})}" th:text="'Follow'" class="btn btn-sm-primary"></a>
+                                <a sec:authorize="isAuthenticated()" th:if="${#lists.contains(user.following, us.id)}" th:href="@{/unfollow/{id}(id=${us.id})}" th:text="'Unfollow'" class="btn btn-sm-primary"></a>
+                                <a sec:authorize="isAuthenticated()" th:if="${user.id} eq ${rtus.id}" th:href="@{/undoRetweet/{id}(id=${tweet.id})}" th:text="'x'" class="btn btn-sm-secondary float-right" data-toggle="tooltip" data-placement="bottom" title="Undo retweet"></a>
+                            </div>
+                        </h4>
+                    </div>
+                </div>
+                <div class="card-body bg-white">
+                    <p class="card-text" th:text="${tweet.tweetContent}"></p>
+                    <img class="img-fluid" th:if="${tweet.media}" th:src="${tweet.media}" />
+                    <br/>
+                    <span th:each="tag : ${#strings.arraySplit(tweet.tags, ' ')}">
+                        <a sec:authorize="isAuthenticated()" th:href="@{/searchTag(q=${tag})}" class="card-link" th:text="'#'+${tag}"></a>
+                        <a sec:authorize="!isAuthenticated()" class="card-link" th:text="'#'+${tag}"></a>
+                    </span>
+                    <div>
+                        <i sec:authorize="!isAuthenticated()" class="far fa-thumbs-up text-dark"></i>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/likeTweet/{id}(id=${tweet.id})}" class="text-dark"><i class="far fa-thumbs-up"></i></a>
+                        <span class="card-text" th:text="${#lists.size(tweet.likes)}"></span>
+                        <span>&nbsp;&nbsp;</span>
+                        <i sec:authorize="!isAuthenticated()" class="fas fa-retweet text-dark"></i>
+                        <a sec:authorize="isAuthenticated()" th:href="@{/retweet/{id}(id=${tweet.id})}" class="text-dark"><i class="fas fa-retweet"></i></a>
+                        <span class="card-text" th:text="${#maps.size(tweet.retweets)}"></span>
+                    </div>
+                    <small class="text-muted" th:text="'Posted: '+${#temporals.format(tweet.retweeted, 'dd-MM-yyyy HH:mm')}"></small>
+                    <br/>
+                    <small class="text-muted" th:text="${'Retweeted: '+#temporals.format(tweet.postTime, 'dd-MM-yyyy HH:mm')}"></small>
+                </div>
             </div>
-            <small class="text-muted" th:text="${#temporals.format(tweet.postTime, 'dd-MM-yyyy HH:mm')}"></small>
+        </div>
+        <div th:if="${tweet.rt ne true}">
+            <div th:each="us : ${users.?[id eq __${tweet.userId}__]}">
+                <h4 class="card-header bg-white border-bottom-0">
+                    <b class="card-text" th:text="${us.name}"></b>
+                    <a sec:authorize="isAuthenticated()" th:href="@{/profile(id=${tweet.userId})}" class="card-link">
+                        <small class="card-text text-muted" th:text="'@'+${us.userName}"></small>
+                    </a>
+                    <a sec:authorize="!isAuthenticated()" class="card-link">
+                        <small class="card-text text-muted"  th:text="'@'+${us.userName}"></small></a>
+                    <a sec:authorize="isAuthenticated()" th:unless="${#lists.contains(user.following, us.id) or us.id eq user.id}" th:href="@{/follow/{id}(id=${us.id})}" class="btn btn-sm-primary">Follow</a>
+                    <a sec:authorize="isAuthenticated()" th:if="${#lists.contains(user.following, us.id)}" th:href="@{/unfollow/{id}(id=${us.id})}" th:text="'Unfollow'" class="btn btn-sm-primary"></a>
+                    <a sec:authorize="isAuthenticated()" th:if="${user.id} eq ${us.id}" th:href="@{/deleteTweet/{id}(id=${tweet.id})}" th:text="'x'" class="btn btn-sm-secondary float-right" data-toggle="tooltip" data-placement="bottom" title="Delete tweet"></a>
+                </h4>
+            </div>
+            <div class="card-body bg-white">
+                <p class="card-text" th:text="${tweet.tweetContent}"></p>
+                <img class="img-fluid" th:if="${tweet.media}" th:src="${tweet.media}" />
+                <br/>
+                <span th:each="tag : ${#strings.arraySplit(tweet.tags, ' ')}">
+                    <a sec:authorize="isAuthenticated()" th:href="@{/searchTag(q=${tag})}" class="card-link" th:text="'#'+${tag}"></a>
+                    <a sec:authorize="!isAuthenticated()" class="card-link" th:text="'#'+${tag}"></a>
+                </span>
+                <div>
+                    <i sec:authorize="!isAuthenticated()" class="far fa-thumbs-up text-dark"></i>
+                    <a sec:authorize="isAuthenticated()" th:href="@{/likeTweet/{id}(id=${tweet.id})}" class="text-dark"><i class="far fa-thumbs-up"></i></a>
+                    <span class="card-text" th:text="${#lists.size(tweet.likes)}"></span>
+                    <span>&nbsp;&nbsp;</span>
+                    <i sec:authorize="!isAuthenticated()" class="fas fa-retweet text-dark"></i>
+                    <a sec:authorize="isAuthenticated()" th:href="@{/retweet/{id}(id=${tweet.id})}" class="text-dark"><i class="fas fa-retweet"></i></a>
+                    <span class="card-text" th:text="${#maps.size(tweet.retweets)}"></span>
+                </div>
+                <small class="text-muted" th:text="'Posted: '+${#temporals.format(tweet.postTime, 'dd-MM-yyyy HH:mm')}"></small>
+            </div>
         </div>
     </div>
-
 </div>
+
 </html>
